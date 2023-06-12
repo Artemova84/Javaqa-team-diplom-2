@@ -39,7 +39,7 @@ public class SavingAccountTest {
 
     @Test
     public void testAddMoreThanMaxBalance() {
-        SavingAccount account = new SavingAccount(2000, 1000,10_000, 5);
+        SavingAccount account = new SavingAccount(2000, 1000, 10_000, 5);
         account.add(11_000);
 
         Assertions.assertEquals(10_000, account.getMaxBalance());
