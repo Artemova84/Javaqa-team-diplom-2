@@ -1,5 +1,3 @@
-package ru.netology.javaqadiplom;
-
 /**
  * Кредитный счёт
  * Может иметь баланс вплоть до отрицательного, но до указанного кредитного лимита.
@@ -44,9 +42,9 @@ public class CreditAccount extends Account {
         if (amount <= 0) {
             return false;
         }
-        
+
         if (balance - amount >= -creditLimit) {
-             balance = balance - amount;
+            balance = balance - amount;
             return true;
         } else {
             return false;
@@ -88,9 +86,9 @@ public class CreditAccount extends Account {
         if (balance > 0) {
             return 0;
         } else {
-        return balance / 100 * rate;
+            return balance / 100 * rate;
         }
-    } 
+    }
 
     public int getCreditLimit() {
         return creditLimit;
