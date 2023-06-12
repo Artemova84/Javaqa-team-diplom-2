@@ -56,7 +56,7 @@ public class SavingAccountTest {
     @Test
     public void testYearChange() {
         SavingAccount account = new SavingAccount(-2000, 1000, 10_000, 5);
-        account.yearChange();
+ 
 
         Assertions.assertEquals(0, account.yearChange());
     }
