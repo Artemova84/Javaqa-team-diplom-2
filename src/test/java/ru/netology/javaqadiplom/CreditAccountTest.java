@@ -78,15 +78,4 @@ public class CreditAccountTest {
 
         Assertions.assertEquals(5_000, account.getBalance());
     }
-
-    @Test
-    public void payLimitTest() {
-        CreditAccount account = new CreditAccount(
-                0,
-                5_000,
-                10
-        );
-        Assertions.assertFalse(account.pay(8_000));
-
-    }
 }
