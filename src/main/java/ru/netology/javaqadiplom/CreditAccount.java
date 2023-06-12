@@ -44,8 +44,9 @@ public class CreditAccount extends Account {
         if (amount <= 0) {
             return false;
         }
-        balance = balance - amount;
+        
         if (balance > -creditLimit) {
+             balance = balance - amount;
             return true;
         } else {
             return false;
@@ -84,11 +85,12 @@ public class CreditAccount extends Account {
      */
     @Override
     public int yearChange() {
-        if (balance >= 0) {
+        if (balance > 0) {
             return 0;
-        }
+        } else {
         return balance / 100 * rate;
-    } //не указано ограничение для положительного баланса, при котором проценты не должны считаться//
+        }
+    } 
 
     public int getCreditLimit() {
         return creditLimit;
