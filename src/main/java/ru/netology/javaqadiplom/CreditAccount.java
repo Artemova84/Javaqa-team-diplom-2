@@ -1,99 +1,100 @@
 package ru.netology.javaqadiplom;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+/**
+ * Кредитный счёт
+ * Может иметь баланс вплоть до отрицательного, но до указанного кредитного лимита.
+ * Имеет ставку - количество процентов годовых на сумму на балансе, если она меньше нуля.
+ * При создании, баланс кредитного счёта изначально выставляется в кредитный лимит.
+ */
+public class CreditAccount extends Account {
+    protected int creditLimit;
+    protected int initialBalance;
 
-public class CreditAccountTest {
-
-    @Test
-    public void shouldAddToPositiveBalance() {
-        CreditAccount account = new CreditAccount(
-                3_000,
-                0,
-                5_000,
-                15
-        );
-
-        account.add(3_000);
-
-        Assertions.assertEquals(3_000, account.getBalance());
+    /**
+     * Создаёт новый объект кредитного счёта с заданными параметрами.
+     * Если параметры некорректны (кредитный лимит отрицательный и так далее), то
+     * должно выкидываться исключения вида IllegalArgumentException.
+     *
+     * @param initialBalance - неотрицательное число, начальный баланс для счёта
+     * @param creditLimit    - неотрицательное число, максимальная сумма которую можно задолжать банку
+     * @param rate           - неотрицательное число, ставка кредитования для расчёта долга за отрицательный баланс
+     */
+    public CreditAccount(int balance, int initialBalance, int creditLimit, int rate) {
+        super(balance, rate);
+        if (rate <= 0) {
+            throw new IllegalArgumentException(
+                    "Накопительная ставка не может быть отрицательной, а у вас: " + rate
+            );
+        }
+        this.initialBalance = initialBalance;
+        this.creditLimit = creditLimit;
+        this.rate = rate;
     }
 
-    @Test
-    public void shouldAddToNegativeBalance() {
-        CreditAccount account = new CreditAccount(
-                0,
-                0,
-                5_000,
-                10
-        );
+    /**
+     * Операция оплаты с карты на указанную сумму.
+     * В результате успешного вызова этого метода, баланс должен уменьшиться
+     * на сумму покупки. Если же операция может привести к некорректному
+     * состоянию счёта (например, баланс может уйти меньше чем лимит), то операция должна
+     * завершиться вернув false и ничего не поменяв на счёте.
+     *
+     * @param amount - сумма покупки
+     * @return true если операция прошла успешно, false иначе.
+     */
+    @Override
+    public boolean pay(int amount) {
+        if (amount <= 0) {
+            return false;
+        }
 
-        account.add(-15_000);
-
-        Assertions.assertEquals(0, account.getBalance());
+        if (initialBalance - amount >= -creditLimit) {
+            balance = initialBalance - amount;
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    @Test
-    public void shouldMoneyAddBalance() {
-        CreditAccount account = new CreditAccount(
-                8_000,
-                5_000,
-                5_000,
-                10
-        );
-
-        account.add(3_000);
-
-        Assertions.assertEquals(8_000, account.getBalance());
+    /**
+     * Операция пополнения карты на указанную сумму.
+     * В результате успешного вызова этого метода, баланс должен увеличиться
+     * на сумму покупки. Если же операция может привести к некорректному
+     * состоянию счёта, то операция должна
+     * завершиться вернув false и ничего не поменяв на счёте.
+     *
+     * @param amount - сумма пополнения
+     * @param amount
+     * @return true если операция прошла успешно, false иначе.
+     * @return
+     */
+    @Override
+    public boolean add(int amount) {
+        if (amount <= 0) {
+            return false;
+        }
+        balance = initialBalance + amount;
+        return true;
     }
 
-    @Test
-    public void shouldYearChangeNegativeTest() {
-        CreditAccount account = new CreditAccount(
-                -230,
-                -200,
-                5_000,
-                15
-        );
-
-        Assertions.assertEquals(-30, account.yearChange());
+    /**
+     * Операция расчёта процентов на отрицательный баланс счёта при условии, что
+     * счёт не будет меняться год. Сумма процентов приводится к целому
+     * числу через отбрасывание дробной части (так и работает целочисленное деление).
+     * Пример: если на счёте -200 рублей, то при ставке 15% ответ должен быть -30.
+     * Пример 2: если на счёте 200 рублей, то при любой ставке ответ должен быть 0.
+     *
+     * @return
+     */
+    @Override
+    public int yearChange() {
+        if (initialBalance >= 0) {
+            return 0;
+        } else {
+            return initialBalance / 100 * rate;
+        }
     }
 
-    @Test
-    public void shouldYearChangePositiveTest() {
-        CreditAccount account = new CreditAccount(
-                200,
-                200,
-                5_000,
-                15
-        );
-
-        Assertions.assertEquals(0, account.yearChange());
-    }
-
-    @Test
-    public void payTest() {
-        CreditAccount account = new CreditAccount(
-                5_000,
-                8_000,
-                5_000,
-                10
-        );
-
-        account.pay(3_000);
-
-        Assertions.assertEquals(5_000, account.getBalance());
-    }
-
-    @Test
-    public void payLimitTest() {
-        CreditAccount account = new CreditAccount(
-                0,
-                0,
-                5_000,
-                10
-        );
-        Assertions.assertFalse(account.pay(8_000));
-
+    public int getCreditLimit() {
+        return creditLimit;
     }
 }
