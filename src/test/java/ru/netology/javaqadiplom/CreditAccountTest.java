@@ -1,7 +1,10 @@
 package ru.netology.javaqadiplom;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
+
+import java.rmi.server.ExportException;
 
 public class CreditAccountTest {
 
@@ -86,7 +89,35 @@ public class CreditAccountTest {
                 5_000,
                 10
         );
-        Assertions.assertFalse(account.pay(8_000));
+        Assertions.assertFalse(account.pay(-8_000));
 
+    }
+
+    @Test
+    public void creditLimitTest() {
+        CreditAccount account = new CreditAccount(0, 5_000, 10);
+        account.pay(6000);
+        Assertions.assertEquals(5000, account.getCreditLimit());
+    }
+
+    @Test
+    public void testBalanceBelowCreditLimit() {
+        CreditAccount account = new CreditAccount(-6_000,5_000,10);
+        account.pay(100);
+        Assertions.assertFalse(account.pay(100));
+    }
+
+    @Test
+    public void testNegativeRateBelowZero() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            CreditAccount account = new CreditAccount(0, 5_000, -10);
+        });
+    }
+
+    @Test
+    public void testNegativeRateEqualsZero() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            CreditAccount account = new CreditAccount(0, 5_000, 0);
+        });
     }
 }

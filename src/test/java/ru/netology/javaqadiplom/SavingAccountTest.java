@@ -16,7 +16,7 @@ public class SavingAccountTest {
     @Test
     public void testPay() {
         SavingAccount account = new SavingAccount(2000, 1000, 10_000, 5);
-        account.pay(-1_000);
+        account.pay(1_000);
 
         Assertions.assertEquals(2000 - 1000, account.getBalance());
     }
@@ -30,6 +30,14 @@ public class SavingAccountTest {
     }
 
     @Test
+    public void testAmountBelowZero() {
+        SavingAccount account = new SavingAccount(2000, 1000, 10_000, 5);
+        account.pay(-2000);
+
+        Assertions.assertFalse(account.pay(-2000));
+    }
+
+    @Test
     public void testAddZero() {
         SavingAccount account = new SavingAccount(2000, 1000, 10_000, 5);
         account.add(0);
@@ -39,7 +47,7 @@ public class SavingAccountTest {
 
     @Test
     public void testAddMoreThanMaxBalance() {
-        SavingAccount account = new SavingAccount(2000, 1000,10_000, 5);
+        SavingAccount account = new SavingAccount(2000, 1000, 10_000, 5);
         account.add(11_000);
 
         Assertions.assertEquals(10_000, account.getMaxBalance());
@@ -52,11 +60,20 @@ public class SavingAccountTest {
 
         Assertions.assertEquals(100, account.yearChange());
     }
-    
+
     @Test
-    public void testYearChange() {
+    public void testYearChangeNegative() {
         SavingAccount account = new SavingAccount(-2000, 1000, 10_000, 5);
 
         Assertions.assertEquals(0, account.yearChange());
     }
+
+    @Test
+    public void testNegativeRate() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            SavingAccount account = new SavingAccount(2000, 1000, 10_000, -5);
+        });
+    }
+
+
 }
