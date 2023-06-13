@@ -8,7 +8,6 @@ package ru.netology.javaqadiplom;
  */
 public class CreditAccount extends Account {
     protected int creditLimit;
-    protected int initialBalance;
 
     /**
      * Создаёт новый объект кредитного счёта с заданными параметрами.
@@ -19,14 +18,13 @@ public class CreditAccount extends Account {
      * @param creditLimit    - неотрицательное число, максимальная сумма которую можно задолжать банку
      * @param rate           - неотрицательное число, ставка кредитования для расчёта долга за отрицательный баланс
      */
-    public CreditAccount(int balance, int initialBalance, int creditLimit, int rate) {
-        super(balance, rate);
+    public CreditAccount(int initialBalance, int creditLimit, int rate) {
         if (rate <= 0) {
             throw new IllegalArgumentException(
                     "Накопительная ставка не может быть отрицательной, а у вас: " + rate
             );
         }
-        this.initialBalance = initialBalance;
+        this.balance = initialBalance;
         this.creditLimit = creditLimit;
         this.rate = rate;
     }
@@ -47,8 +45,8 @@ public class CreditAccount extends Account {
             return false;
         }
 
-        if (initialBalance - amount >= -creditLimit) {
-            balance = initialBalance - amount;
+        if (balance - amount >= -creditLimit) {
+            balance = balance - amount;
             return true;
         } else {
             return false;
@@ -71,9 +69,10 @@ public class CreditAccount extends Account {
     public boolean add(int amount) {
         if (amount <= 0) {
             return false;
+        } else {
+            balance = balance + amount;
+            return true;
         }
-        balance = initialBalance + amount;
-        return true;
     }
 
     /**
@@ -87,14 +86,10 @@ public class CreditAccount extends Account {
      */
     @Override
     public int yearChange() {
-        if (initialBalance >= 0) {
+        if (balance >= 0) {
             return 0;
         } else {
-            return initialBalance / 100 * rate;
+            return balance / 100 * rate;
         }
-    }
-
-    public int getCreditLimit() {
-        return creditLimit;
     }
 }
