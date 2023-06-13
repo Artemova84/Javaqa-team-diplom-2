@@ -9,7 +9,6 @@ package ru.netology.javaqadiplom;
 public class SavingAccount extends Account {
     protected int minBalance;
     protected int maxBalance;
-    protected int initialBalance;
 
     /**
      * Создаёт новый объект сберегательного счёта с заданными параметрами.
@@ -21,14 +20,13 @@ public class SavingAccount extends Account {
      * @param maxBalance     - максимальный баланс
      * @param rate           - неотрицательное число, ставка в процентах годовых на остаток
      */
-    public SavingAccount(int balance, int initialBalance, int minBalance, int maxBalance, int rate) {
-        super(balance, rate);
+    public SavingAccount(int initialBalance, int minBalance, int maxBalance, int rate) {
         if (rate < 0) {
             throw new IllegalArgumentException(
                     "Накопительная ставка не может быть отрицательной, а у вас: " + rate
             );
         }
-        this.initialBalance = initialBalance;
+        this.balance = initialBalance;
         this.minBalance = minBalance;
         this.maxBalance = maxBalance;
         this.rate = rate;
@@ -49,8 +47,8 @@ public class SavingAccount extends Account {
         if (amount <= 0) {
             return false;
         }
-        if (initialBalance - amount >= minBalance) {
-            balance = initialBalance - amount;
+        if (balance - amount >= minBalance) {
+            balance = balance - amount;
             return true;
         } else {
             return false;
@@ -74,8 +72,8 @@ public class SavingAccount extends Account {
         if (amount <= 0) {
             return false;
         }
-        if (initialBalance + amount <= maxBalance) {
-            balance = initialBalance + amount;
+        if (balance + amount <= maxBalance) {
+            balance = balance + amount;
             return true;
         } else {
             return false;
@@ -92,8 +90,8 @@ public class SavingAccount extends Account {
      */
     @Override
     public int yearChange() {
-        if (initialBalance > 0) {
-            return initialBalance / 100 * rate;
+        if (balance > 0) {
+            return balance / 100 * rate;
         } else {
             return 0;
         }
