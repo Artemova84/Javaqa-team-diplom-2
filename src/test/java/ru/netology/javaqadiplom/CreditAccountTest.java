@@ -59,6 +59,17 @@ public class CreditAccountTest {
     }
 
     @Test
+    public void shouldYearChangeZeroTest() {
+        CreditAccount account = new CreditAccount(
+                0,
+                5_000,
+                15
+        );
+
+        Assertions.assertEquals(0, account.yearChange());
+    }
+
+    @Test
     public void shouldYearChangePositiveTest() {
         CreditAccount account = new CreditAccount(
                 200,
