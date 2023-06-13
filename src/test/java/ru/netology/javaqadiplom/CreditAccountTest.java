@@ -105,9 +105,16 @@ public class CreditAccountTest {
     }
 
     @Test
-    public void creditLimitTest() {
+    public void creditLimitMaxTest() {
         CreditAccount account = new CreditAccount(0, 5_000, 10);
         account.pay(6000);
+        Assertions.assertEquals(5000, account.getCreditLimit());
+    }
+
+    @Test
+    public void creditLimitTest() {
+        CreditAccount account = new CreditAccount(0, 5_000, 10);
+        account.pay(5000);
         Assertions.assertEquals(5000, account.getCreditLimit());
     }
 
